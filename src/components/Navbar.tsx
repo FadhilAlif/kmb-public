@@ -76,7 +76,7 @@ const Navbar = () => {
           <div className="hidden md:block">
             <Button asChild className="bg-whatsapp hover:bg-whatsapp-hover text-accent-foreground font-semibold gap-2">
               <a
-                href="https://wa.me/6281234567890?text=Halo, saya tertarik dengan kursus mobil"
+                href="https://web.whatsapp.com/send?phone=6285100450236&text=Halo, saya tertarik dengan kursus mobil"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -121,7 +121,7 @@ const Navbar = () => {
                 className="w-full bg-whatsapp hover:bg-whatsapp-hover text-accent-foreground font-semibold gap-2"
               >
                 <a
-                  href="https://wa.me/6281234567890?text=Halo, saya tertarik dengan kursus mobil"
+                  href="https://web.whatsapp.com/send?phone=6285100450236&text=Halo, saya tertarik dengan kursus mobil"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
