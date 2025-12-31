@@ -65,7 +65,7 @@ const HeroSection = () => {
                 className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold gap-2 text-base px-8"
               >
                 <a
-                  href="https://wa.me/6281234567890?text=Halo, saya ingin tanya jadwal kursus"
+                  href="https://web.whatsapp.com/send?phone=6285100450236&text=Halo, saya ingin tanya jadwal kursus"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

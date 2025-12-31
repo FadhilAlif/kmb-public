@@ -221,7 +221,7 @@ const PricingSection = () => {
                 }`}
               >
                 <a
-                  href={`https://wa.me/6281234567890?text=Halo, saya tertarik dengan ${pkg.name} (${useOwnCar ? "Mobil Sendiri" : "Mobil Kursus"})`}
+                  href={`https://web.whatsapp.com/send?phone=6285100450236&text=Halo, saya tertarik dengan ${pkg.name} (${useOwnCar ? "Mobil Sendiri" : "Mobil Kursus"})`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
