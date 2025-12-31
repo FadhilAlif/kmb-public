@@ -11,6 +11,48 @@ const ScheduleSection = () => {
         theme: "light",
         hideEventTypeDetails: true,
         layout: "month_view",
+        cssVarsPerTheme: {
+          light: {
+            "cal-brand": "#1a8a8a", // Primary teal hsl(185, 65%, 35%)
+            "cal-brand-emphasis": "#147070", // Darker teal for hover
+            "cal-brand-text": "#ffffff",
+            "cal-brand-subtle": "#e6f5f5", // Light teal background
+            "cal-bg": "#fafbfc", // Background color
+            "cal-bg-emphasis": "#ffffff",
+            "cal-bg-subtle": "#f0f4f5",
+            "cal-bg-muted": "#e8ecee",
+            "cal-bg-inverted": "#1c2a33",
+            "cal-border": "#d4dde2", // Border color
+            "cal-border-emphasis": "#c0ccd3",
+            "cal-border-subtle": "#e8ecee",
+            "cal-border-booker": "#d4dde2",
+            "cal-text": "#1c2a33", // Foreground text
+            "cal-text-emphasis": "#0f171c",
+            "cal-text-subtle": "#5c6f7a", // Muted foreground
+            "cal-text-muted": "#7a8f9a",
+            "cal-text-inverted": "#fafbfc",
+          },
+          dark: {
+            "cal-brand": "#2aa3a3", // Primary teal dark mode hsl(185, 60%, 45%)
+            "cal-brand-emphasis": "#3cb8b8",
+            "cal-brand-text": "#ffffff",
+            "cal-brand-subtle": "#1a3333",
+            "cal-bg": "#141c22", // Dark background
+            "cal-bg-emphasis": "#1c2830",
+            "cal-bg-subtle": "#1c2830",
+            "cal-bg-muted": "#243038",
+            "cal-bg-inverted": "#fafbfc",
+            "cal-border": "#2a3840",
+            "cal-border-emphasis": "#3a4850",
+            "cal-border-subtle": "#1c2830",
+            "cal-border-booker": "#2a3840",
+            "cal-text": "#f5f8fa",
+            "cal-text-emphasis": "#ffffff",
+            "cal-text-subtle": "#8aa0ac",
+            "cal-text-muted": "#6a8090",
+            "cal-text-inverted": "#141c22",
+          },
+        },
       });
     })();
   }, []);
