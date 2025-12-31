@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const navLinks = [
   { href: "#beranda", label: "Beranda" },
   { href: "#paket", label: "Paket Harga" },
+  { href: "#jadwal", label: "Cek Jadwal" },
   { href: "#tentang", label: "Tentang Kami" },
   { href: "#kontak", label: "Kontak" },
 ];
