@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,7 +10,7 @@ const DEFAULT_MESSAGE = "Halo, saya tertarik dengan kursus mobil";
 
 const navLinks = [
   { href: "#paket", label: "Paket Harga" },
-  { href: "#jadwal", label: "Cek Jadwal" },
+  { href: "#jadwal", label: "Cek Jadwal", isBooking: true },
   { href: "#tentang", label: "Tentang Kami" },
   { href: "#kontak", label: "Kontak" },
 ];
@@ -18,6 +19,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,9 +29,13 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (link: typeof navLinks[0]) => {
     setIsOpen(false);
-    const element = document.querySelector(href);
+    if ((link as any).isBooking) {
+      navigate("/booking");
+      return;
+    }
+    const element = document.querySelector(link.href);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
@@ -54,7 +60,7 @@ const Navbar = () => {
               href="#beranda"
               onClick={(e) => {
                 e.preventDefault();
-                handleNavClick("#beranda");
+                handleNavClick({ href: "#beranda", label: "Beranda" });
               }}
               className="flex items-center gap-2"
             >
@@ -74,7 +80,7 @@ const Navbar = () => {
                   href={link.href}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleNavClick(link.href);
+                    handleNavClick(link);
                   }}
                   className="text-muted-foreground hover:text-primary font-medium transition-colors"
                 >
@@ -117,7 +123,7 @@ const Navbar = () => {
                     href={link.href}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleNavClick(link.href);
+                      handleNavClick(link);
                     }}
                     className="block py-2 text-muted-foreground hover:text-primary font-medium transition-colors"
                   >
