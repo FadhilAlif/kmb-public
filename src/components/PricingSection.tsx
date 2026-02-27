@@ -1,118 +1,21 @@
 import { useState } from "react";
-import { Check, Star, MessageCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
-import WhatsAppConfirmDialog from "./WhatsAppConfirmDialog";
-
-const PHONE_NUMBER = "6285100450236";
-
-interface Package {
-  name: string;
-  description: string;
-  sessions: number;
-  priceOwn: number;
-  priceCourse: number;
-  featuresOwn: string[];
-  featuresCourse: string[];
-  popular?: boolean;
-}
-
-const packages: Package[] = [
-  {
-    name: "Paket Dasar",
-    description: "Cocok untuk pemula yang baru pertama kali belajar",
-    sessions: 5,
-    priceCourse: 750000,
-    priceOwn: 500000,
-    featuresCourse: [
-      "5x Pertemuan @ 90 menit",
-      "Mobil kursus disediakan",
-      "BBM sudah termasuk",
-      "Materi dasar mengemudi",
-      "Antar-jemput rumah",
-    ],
-    featuresOwn: [
-      "5x Pertemuan @ 90 menit",
-      "Pakai mobil pribadi Anda",
-      "BBM ditanggung siswa",
-      "Materi dasar mengemudi",
-      "Instruktur ke lokasi Anda",
-    ],
-  },
-  {
-    name: "Paket Lancar",
-    description: "Untuk yang sudah bisa tapi ingin lebih lancar",
-    sessions: 8,
-    priceCourse: 1100000,
-    priceOwn: 750000,
-    featuresCourse: [
-      "8x Pertemuan @ 90 menit",
-      "Mobil kursus disediakan",
-      "BBM sudah termasuk",
-      "Latihan di jalan raya",
-      "Parkir & manuver",
-      "Antar-jemput rumah",
-    ],
-    featuresOwn: [
-      "8x Pertemuan @ 90 menit",
-      "Pakai mobil pribadi Anda",
-      "BBM ditanggung siswa",
-      "Latihan di jalan raya",
-      "Parkir & manuver",
-      "Instruktur ke lokasi Anda",
-    ],
-    popular: true,
-  },
-  {
-    name: "Paket Mahir",
-    description: "Sampai mahir & siap ujian SIM",
-    sessions: 12,
-    priceCourse: 1500000,
-    priceOwn: 1000000,
-    featuresCourse: [
-      "12x Pertemuan @ 90 menit",
-      "Mobil kursus disediakan",
-      "BBM sudah termasuk",
-      "Semua teknik mengemudi",
-      "Simulasi ujian SIM",
-      "Pendampingan ke Samsat",
-      "Garansi sampai bisa",
-    ],
-    featuresOwn: [
-      "12x Pertemuan @ 90 menit",
-      "Pakai mobil pribadi Anda",
-      "BBM ditanggung siswa",
-      "Semua teknik mengemudi",
-      "Simulasi ujian SIM",
-      "Pendampingan ke Samsat",
-      "Garansi sampai bisa",
-    ],
-  },
-];
-
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-};
+import { packages, formatPrice } from "./booking/bookingData";
 
 const PricingSection = () => {
   const [useOwnCar, setUseOwnCar] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<string>("");
+  const navigate = useNavigate();
 
   const handlePackageClick = (pkgName: string) => {
-    const message = `Halo, saya tertarik dengan ${pkgName} (${useOwnCar ? "Mobil Sendiri" : "Mobil Kursus"})`;
-    setSelectedPackage(message);
-    setDialogOpen(true);
+    const tipe = useOwnCar ? "sendiri" : "kursus";
+    navigate(`/booking?paket=${encodeURIComponent(pkgName)}&tipe=${tipe}`);
   };
 
   return (
-    <>
       <section id="paket" className="py-20 bg-background">
         <div className="container mx-auto">
           <motion.div
@@ -232,7 +135,7 @@ const PricingSection = () => {
                       : "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
                   }`}
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  
                   Pilih Paket Ini
                 </Button>
               </motion.div>
@@ -240,15 +143,7 @@ const PricingSection = () => {
           </div>
         </div>
       </section>
-
-      <WhatsAppConfirmDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        phoneNumber={PHONE_NUMBER}
-        message={selectedPackage}
-      />
-    </>
-  );
+    );
 };
 
 export default PricingSection;
