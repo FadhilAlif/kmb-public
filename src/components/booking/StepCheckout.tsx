@@ -1,11 +1,19 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Upload, CheckCircle2, FileText, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Upload,
+  CheckCircle2,
+  FileText,
+  X,
+  Loader2,
+} from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { type BookingData, formatPrice } from "./bookingData";
+import { submitBooking } from "@/services/bookingService";
 
 interface StepCheckoutProps {
   data: BookingData;
@@ -17,6 +25,7 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
   const [file, setFile] = useState<File | null>(data.buktiTransfer);
   const [preview, setPreview] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -38,17 +47,51 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
     }
   };
 
-  const handleSubmit = () => {
-    const id = "BK-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-    setBookingId(id);
-    toast({
-      title: "Booking berhasil dikonfirmasi",
-      description: `Nomor booking Anda: ${id}`,
-    });
-    setSubmitted(true);
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      if (!data.date || !data.timeSlot) {
+        throw new Error(
+          "Jadwal belum dipilih. Silakan kembali dan pilih jadwal.",
+        );
+      }
+
+      const result = await submitBooking({
+        nama: data.nama,
+        whatsapp: data.whatsapp,
+        titikJemput: data.titikJemput,
+        catatan: data.catatan,
+        packageId: data.packageId,
+        totalPrice: data.price,
+        totalSessions: data.sessions,
+        date: data.date,
+        timeSlot: data.timeSlot,
+        buktiTransfer: file,
+      });
+
+      setBookingId(result.bookingId);
+      toast({
+        title: "Booking berhasil dikonfirmasi! 🎉",
+        description: `Booking ID: ${result.bookingId.slice(0, 8).toUpperCase()}`,
+      });
+      setSubmitted(true);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Terjadi kesalahan saat membuat booking.";
+      toast({
+        title: "Booking Gagal",
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
+    const shortId = bookingId.slice(0, 8).toUpperCase();
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -58,18 +101,22 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
         <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle2 className="w-10 h-10 text-primary" />
         </div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Booking Berhasil!</h2>
-        <p className="text-muted-foreground mb-4">
-          Nomor booking Anda:
-        </p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">
+          Booking Berhasil!
+        </h2>
+        <p className="text-muted-foreground mb-4">Nomor booking Anda:</p>
         <div className="bg-muted rounded-xl p-4 mb-6">
-          <span className="text-2xl font-mono font-bold text-primary">{bookingId}</span>
+          <span className="text-2xl font-mono font-bold text-primary">
+            {shortId}
+          </span>
         </div>
         <p className="text-sm text-muted-foreground mb-8">
-          Kami akan menghubungi Anda via WhatsApp di <strong>{data.whatsapp}</strong> untuk konfirmasi.
+          Kami akan menghubungi Anda via WhatsApp di{" "}
+          <strong>{data.whatsapp}</strong> untuk konfirmasi. Bukti transfer Anda
+          sedang diverifikasi oleh admin.
         </p>
         <Button
-          onClick={() => window.location.href = "/"}
+          onClick={() => (window.location.href = "/")}
           className="bg-primary text-primary-foreground"
         >
           Kembali ke Beranda
@@ -81,61 +128,91 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Checkout & Pembayaran</h2>
-        <p className="text-muted-foreground">Periksa ringkasan dan upload bukti transfer</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+          Checkout & Pembayaran
+        </h2>
+        <p className="text-muted-foreground">
+          Periksa ringkasan dan upload bukti transfer
+        </p>
       </div>
 
       {/* Summary */}
       <div className="bg-card border border-border rounded-2xl p-6 mb-6 space-y-4">
-        <h3 className="font-semibold text-foreground text-lg">Ringkasan Booking</h3>
+        <h3 className="font-semibold text-foreground text-lg">
+          Ringkasan Booking
+        </h3>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <span className="text-muted-foreground">Paket</span>
-          <span className="text-foreground font-medium">{data.packageName}</span>
+          <span className="text-foreground font-medium">
+            {data.packageName}
+          </span>
           <span className="text-muted-foreground">Tipe</span>
-          <span className="text-foreground font-medium">{data.useOwnCar ? "Mobil Sendiri" : "Mobil Kursus"}</span>
+          <span className="text-foreground font-medium">
+            {data.useOwnCar ? "Mobil Sendiri" : "Mobil Kursus"}
+          </span>
           <span className="text-muted-foreground">Jadwal</span>
           <span className="text-foreground font-medium">
-            {data.date ? format(data.date, "EEEE, d MMMM yyyy", { locale: id }) : "-"}, {data.timeSlot}
+            {data.date
+              ? format(data.date, "EEEE, d MMMM yyyy", { locale: id })
+              : "-"}
+            , {data.timeSlot}
           </span>
           <span className="text-muted-foreground">Nama</span>
           <span className="text-foreground font-medium">{data.nama}</span>
           <span className="text-muted-foreground">WhatsApp</span>
           <span className="text-foreground font-medium">{data.whatsapp}</span>
           <span className="text-muted-foreground">Titik Jemput</span>
-          <span className="text-foreground font-medium">{data.titikJemput}</span>
+          <span className="text-foreground font-medium">
+            {data.titikJemput}
+          </span>
         </div>
         <div className="border-t border-border pt-4 flex justify-between items-center">
           <span className="font-semibold text-foreground">Total Biaya</span>
-          <span className="text-2xl font-bold text-primary">{formatPrice(data.price)}</span>
+          <span className="text-2xl font-bold text-primary">
+            {formatPrice(data.price)}
+          </span>
         </div>
       </div>
 
       {/* Bank Info */}
       <div className="bg-muted rounded-2xl p-6 mb-6">
-        <h3 className="font-semibold text-foreground mb-3">Transfer ke Rekening</h3>
+        <h3 className="font-semibold text-foreground mb-3">
+          Transfer ke Rekening
+        </h3>
         <div className="space-y-3">
           <div className="bg-card rounded-xl p-4 border border-border">
             <p className="text-sm text-muted-foreground">Bank BCA</p>
-            <p className="text-lg font-mono font-bold text-foreground">1234567890</p>
-            <p className="text-sm text-muted-foreground">a.n. Kursus Mobil Bantul</p>
+            <p className="text-lg font-mono font-bold text-foreground">
+              1234567890
+            </p>
+            <p className="text-sm text-muted-foreground">
+              a.n. Kursus Mobil Bantul
+            </p>
           </div>
           <div className="bg-card rounded-xl p-4 border border-border">
             <p className="text-sm text-muted-foreground">Bank BRI</p>
-            <p className="text-lg font-mono font-bold text-foreground">0987654321</p>
-            <p className="text-sm text-muted-foreground">a.n. Kursus Mobil Bantul</p>
+            <p className="text-lg font-mono font-bold text-foreground">
+              0987654321
+            </p>
+            <p className="text-sm text-muted-foreground">
+              a.n. Kursus Mobil Bantul
+            </p>
           </div>
         </div>
       </div>
 
       {/* Upload */}
       <div className="mb-8">
-        <h3 className="font-semibold text-foreground mb-3">Upload Bukti Transfer</h3>
+        <h3 className="font-semibold text-foreground mb-3">
+          Upload Bukti Transfer
+        </h3>
         <input
           ref={fileRef}
           type="file"
           accept=".jpg,.jpeg,.png,.pdf"
           className="hidden"
           onChange={handleFileChange}
+          aria-label="file"
         />
         {!file ? (
           <button
@@ -143,24 +220,39 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
             className="w-full border-2 border-dashed border-border rounded-2xl p-8 flex flex-col items-center gap-3 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
           >
             <Upload className="w-8 h-8" />
-            <span className="font-medium">Klik untuk upload bukti transfer</span>
+            <span className="font-medium">
+              Klik untuk upload bukti transfer
+            </span>
             <span className="text-xs">.jpg, .png, .pdf — maks 5MB</span>
           </button>
         ) : (
           <div className="border border-border rounded-2xl p-4 flex items-center gap-4">
             {preview ? (
-              <img src={preview} alt="Preview" className="w-16 h-16 object-cover rounded-lg" />
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-16 h-16 object-cover rounded-lg"
+              />
             ) : (
               <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
                 <FileText className="w-6 h-6 text-muted-foreground" />
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
-              <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(0)} KB</p>
+              <p className="text-sm font-medium text-foreground truncate">
+                {file.name}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {(file.size / 1024).toFixed(0)} KB
+              </p>
             </div>
             <button
-              onClick={() => { setFile(null); setPreview(null); onUpdate({ buktiTransfer: null }); }}
+              onClick={() => {
+                setFile(null);
+                setPreview(null);
+                onUpdate({ buktiTransfer: null });
+              }}
+              aria-label="remove file"
               className="text-muted-foreground hover:text-destructive"
             >
               <X className="w-5 h-5" />
@@ -170,15 +262,27 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
       </div>
 
       <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack} className="gap-2">
+        <Button
+          variant="outline"
+          onClick={onBack}
+          className="gap-2"
+          disabled={submitting}
+        >
           <ArrowLeft className="w-4 h-4" /> Kembali
         </Button>
         <Button
           onClick={handleSubmit}
-          disabled={!file}
-          className="bg-primary text-primary-foreground font-semibold"
+          disabled={!file || submitting}
+          className="bg-primary text-primary-foreground font-semibold min-w-[180px]"
         >
-          Konfirmasi Booking
+          {submitting ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              Memproses...
+            </>
+          ) : (
+            "Konfirmasi Booking"
+          )}
         </Button>
       </div>
     </div>

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, Clock, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { type BookingData, getTimeSlotsForDate } from "./bookingData";
+import { type BookingData, ALL_TIME_SLOTS } from "./bookingData";
+import { useBookedSlots } from "@/hooks/useBookedSlots";
 
 interface StepJadwalProps {
   data: BookingData;
@@ -19,11 +20,13 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(data.date);
   const [selectedTime, setSelectedTime] = useState(data.timeSlot);
 
-  const timeSlots = selectedDate ? getTimeSlotsForDate(selectedDate) : [];
+  // Fetch real booked slots from Supabase for the selected date
+  const { data: bookedSlots, isLoading: loadingSlots } =
+    useBookedSlots(selectedDate);
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
-    setSelectedTime("");
+    setSelectedTime(""); // reset time whenever date changes
   };
 
   const handleContinue = () => {
@@ -33,12 +36,17 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0); // reset ke midnight agar perbandingan murni per-hari
 
   return (
     <div>
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Pilih Jadwal</h2>
-        <p className="text-muted-foreground">Pilih tanggal dan waktu yang tersedia</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+          Pilih Jadwal
+        </h2>
+        <p className="text-muted-foreground">
+          Pilih tanggal dan waktu yang tersedia
+        </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
@@ -60,33 +68,50 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
+              key={selectedDate.toDateString()}
             >
-              <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+              <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Clock className="w-4 h-4 text-primary" />
-                Slot Waktu — {format(selectedDate, "EEEE, d MMMM yyyy", { locale: id })}
+                Slot Waktu —{" "}
+                {format(selectedDate, "EEEE, d MMMM yyyy", { locale: id })}
               </h3>
-              <div className="space-y-3">
-                {timeSlots.map((slot) => (
-                  <button
-                    key={slot.time}
-                    disabled={!slot.available}
-                    onClick={() => setSelectedTime(slot.time)}
-                    className={cn(
-                      "w-full p-4 rounded-xl border text-left transition-all",
-                      !slot.available
-                        ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
-                        : selectedTime === slot.time
-                        ? "border-primary bg-primary/10 text-foreground ring-2 ring-primary/20"
-                        : "border-border bg-card text-foreground hover:border-primary/40"
-                    )}
-                  >
-                    <span className="font-medium">{slot.label}</span>
-                    {!slot.available && (
-                      <span className="block text-xs text-destructive mt-1">Slot penuh</span>
-                    )}
-                  </button>
-                ))}
-              </div>
+
+              {/* Loading state */}
+              {loadingSlots ? (
+                <div className="flex items-center justify-center py-10 gap-2 text-muted-foreground">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span className="text-sm">Memeriksa ketersediaan...</span>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {ALL_TIME_SLOTS.map((slot) => {
+                    const isBooked = bookedSlots?.has(slot.time) ?? false;
+
+                    return (
+                      <button
+                        key={slot.time}
+                        disabled={isBooked}
+                        onClick={() => setSelectedTime(slot.time)}
+                        className={cn(
+                          "w-full p-4 rounded-xl border text-left transition-all",
+                          isBooked
+                            ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50"
+                            : selectedTime === slot.time
+                              ? "border-primary bg-primary/10 text-foreground ring-2 ring-primary/20"
+                              : "border-border bg-card text-foreground hover:border-primary/40",
+                        )}
+                      >
+                        <span className="font-medium">{slot.label}</span>
+                        {isBooked && (
+                          <span className="block text-xs text-destructive mt-1">
+                            Slot penuh
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </motion.div>
           ) : (
             <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -102,7 +127,7 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
         </Button>
         <Button
           onClick={handleContinue}
-          disabled={!selectedDate || !selectedTime}
+          disabled={!selectedDate || !selectedTime || loadingSlots}
           className="bg-primary text-primary-foreground"
         >
           Lanjutkan
