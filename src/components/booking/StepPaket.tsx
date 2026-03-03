@@ -66,6 +66,7 @@ const StepPaket = ({ data, onUpdate, onNext }: StepPaketProps) => {
           const price = useOwnCar ? pkg.priceOwn : pkg.priceCourse;
           const features = useOwnCar ? pkg.featuresOwn : pkg.featuresCourse;
           const isExpanded = expandedPkg === pkg.name;
+          const savingsPercent = Math.round((1 - pkg.priceOwn / pkg.priceCourse) * 100);
 
           return (
             <motion.div
@@ -109,7 +110,16 @@ const StepPaket = ({ data, onUpdate, onNext }: StepPaketProps) => {
                     >
                       {formatPrice(price)}
                     </motion.span>
-                    <span className="text-[11px] text-primary font-medium group-hover:underline">
+                    {useOwnCar && (
+                      <motion.span
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="inline-block text-[10px] font-semibold bg-green-500/15 text-green-600 dark:text-green-400 px-1.5 py-0.5 rounded-full mb-0.5"
+                      >
+                        Hemat {savingsPercent}%
+                      </motion.span>
+                    )}
+                    <span className="text-[11px] text-primary font-medium group-hover:underline block">
                       Pilih →
                     </span>
                   </div>
