@@ -102,19 +102,25 @@ const StepPaket = ({ data, onUpdate, onNext }: StepPaketProps) => {
                     <p className="text-xs text-muted-foreground">{pkg.description}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <motion.span
+                    <motion.div
                       key={useOwnCar ? "own" : "course"}
                       initial={{ opacity: 0, y: -6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-lg font-bold text-foreground block"
                     >
-                      {formatPrice(price)}
-                    </motion.span>
+                      {useOwnCar && (
+                        <span className="text-xs text-muted-foreground line-through block">
+                          {formatPrice(pkg.priceCourse)}
+                        </span>
+                      )}
+                      <span className="text-lg font-bold text-foreground block">
+                        {formatPrice(price)}
+                      </span>
+                    </motion.div>
                     {useOwnCar && (
                       <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="inline-block text-[10px] font-semibold bg-green-500/15 text-green-600 dark:text-green-400 px-1.5 py-0.5 rounded-full mb-0.5"
+                        className="inline-block text-[10px] font-semibold bg-accent/30 text-accent-foreground px-1.5 py-0.5 rounded-full mb-0.5"
                       >
                         Hemat {savingsPercent}%
                       </motion.span>
