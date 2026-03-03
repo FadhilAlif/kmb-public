@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AnimatePresence, motion } from "framer-motion";
 import BookingStepper from "@/components/booking/BookingStepper";
 import StepPaket from "@/components/booking/StepPaket";
 import StepJadwal from "@/components/booking/StepJadwal";
@@ -14,7 +15,13 @@ const BookingPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
   const [data, setData] = useState<BookingData>(initialBookingData);
+
+  const goTo = (next: number) => {
+    setDirection(next > step ? 1 : -1);
+    setStep(next);
+  };
 
   // Pre-fill from query params
   useEffect(() => {
@@ -31,6 +38,7 @@ const BookingPage = () => {
           price: useOwn ? pkg.priceOwn : pkg.priceCourse,
           sessions: pkg.sessions,
         }));
+        setDirection(1);
         setStep(2);
       }
     }
@@ -61,18 +69,29 @@ const BookingPage = () => {
         <div className="container mx-auto py-8 px-4">
           <BookingStepper currentStep={step} />
 
-          {step === 1 && (
-            <StepPaket data={data} onUpdate={updateData} onNext={() => setStep(2)} />
-          )}
-          {step === 2 && (
-            <StepJadwal data={data} onUpdate={updateData} onNext={() => setStep(3)} onBack={() => setStep(1)} />
-          )}
-          {step === 3 && (
-            <StepDataDiri data={data} onUpdate={updateData} onNext={() => setStep(4)} onBack={() => setStep(2)} />
-          )}
-          {step === 4 && (
-            <StepCheckout data={data} onUpdate={updateData} onBack={() => setStep(3)} />
-          )}
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={step}
+              custom={direction}
+              initial={{ opacity: 0, x: direction * 60 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction * -60 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              {step === 1 && (
+                <StepPaket data={data} onUpdate={updateData} onNext={() => goTo(2)} />
+              )}
+              {step === 2 && (
+                <StepJadwal data={data} onUpdate={updateData} onNext={() => goTo(3)} onBack={() => goTo(1)} />
+              )}
+              {step === 3 && (
+                <StepDataDiri data={data} onUpdate={updateData} onNext={() => goTo(4)} onBack={() => goTo(2)} />
+              )}
+              {step === 4 && (
+                <StepCheckout data={data} onUpdate={updateData} onBack={() => goTo(3)} />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </>
