@@ -1,9 +1,10 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Upload, CheckCircle2, FileText, Image, X } from "lucide-react";
+import { ArrowLeft, Upload, CheckCircle2, FileText, X } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { motion } from "framer-motion";
+import { toast } from "@/hooks/use-toast";
 import { type BookingData, formatPrice } from "./bookingData";
 
 interface StepCheckoutProps {
@@ -40,6 +41,10 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
   const handleSubmit = () => {
     const id = "BK-" + Math.random().toString(36).substring(2, 8).toUpperCase();
     setBookingId(id);
+    toast({
+      title: "Booking berhasil dikonfirmasi",
+      description: `Nomor booking Anda: ${id}`,
+    });
     setSubmitted(true);
   };
 
