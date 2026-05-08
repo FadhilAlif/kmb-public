@@ -26,25 +26,25 @@ Establish measurement baseline, configure tooling, fix technical debt.
 **Files**: None (measurement only)  
 **Output**: `docs/baseline-metrics.md`  
 
-- [ ] Run Lighthouse audit (mobile) on current app
+- [x] Run Lighthouse audit (mobile) on current app
   - `npx lighthouse http://localhost:5173 --preset=mobile --output=json --output-path=./docs/baseline-mobile.json`
-- [ ] Run Lighthouse audit (desktop)
+- [x] Run Lighthouse audit (desktop)
   - `npx lighthouse http://localhost:5173 --preset=desktop --output=json --output-path=./docs/baseline-desktop.json`
-- [ ] Analyze bundle size
+- [x] Analyze bundle size
   - `npm run build`
   - `npx vite-bundle-visualizer`
-- [ ] Document current CWV numbers (LCP, INP, CLS, FCP, TTFB)
+- [x] Document current CWV numbers (LCP, INP, CLS, FCP, TTFB)
 
 #### 1.2 TypeScript Strict Mode (Technical Debt)
 **Files**: `tsconfig.json`, ~15-20 source files  
 **Risk**: Medium - may reveal hidden bugs  
 
-- [ ] Enable strict flags incrementally:
+- [x] Enable strict flags incrementally:
   - `noImplicitAny: true`
   - `strictNullChecks: true`
   - `strictFunctionTypes: true`
-- [ ] Fix all resulting type errors
-- [ ] Add missing return types to functions in:
+- [x] Fix all resulting type errors
+- [x] Add missing return types to functions in:
   - `src/services/bookingService.ts`
   - `src/hooks/usePackages.ts`
   - `src/hooks/useBookedSlots.ts`
@@ -52,12 +52,12 @@ Establish measurement baseline, configure tooling, fix technical debt.
 #### 1.3 Project Configuration
 **Files**: `vite.config.ts`, `tailwind.config.ts`, `package.json`  
 
-- [ ] Configure Vite for code splitting
+- [x] Configure Vite for code splitting
   - Add manual chunks for vendors (React, Framer Motion, Supabase)
-- [ ] Configure Tailwind for dark mode
+- [x] Configure Tailwind for dark mode
   - `darkMode: 'class'`
   - Add CSS variables for theme tokens
-- [ ] Install missing dependencies (if any)
+- [x] Install missing dependencies (if any)
   - Verify `next-themes` is properly configured
 
 ### Entry Criteria
@@ -83,12 +83,12 @@ Implement complete dark mode with theme toggle.
 **Files**: `src/App.tsx`, `src/components/ThemeProvider.tsx` (new)  
 **Parallel**: Can work alongside 2.2, 2.3  
 
-- [ ] Create `ThemeProvider` wrapper component
+- [x] Create `ThemeProvider` wrapper component
   - Wrap app in `next-themes` provider
   - Configure `attribute="class"`
   - Handle system preference detection
   - Add `localStorage` persistence
-- [ ] Add theme toggle component
+- [x] Add theme toggle component
   - Sun/moon icon (Lucide)
   - Placement: header/navigation
   - Smooth transition animation
@@ -97,10 +97,10 @@ Implement complete dark mode with theme toggle.
 **Files**: `src/components/ui/*.tsx` (~20 files)  
 **Parallel**: Can work alongside 2.1  
 
-- [ ] Audit all shadcn/ui components for dark mode support
+- [x] Audit all shadcn/ui components for dark mode support
   - Verify `dark:` variants present
   - Add missing dark mode styles
-- [ ] Update component-specific styles:
+- [x] Update component-specific styles:
   - Button variants
   - Card backgrounds
   - Input borders
@@ -111,7 +111,7 @@ Implement complete dark mode with theme toggle.
 **Files**: `src/components/**/*.tsx` (~15 files)  
 **Parallel**: Can work alongside 2.1, 2.2  
 
-- [ ] Update all custom components with dark variants:
+- [x] Update all custom components with dark variants:
   - `HeroSection`
   - `WhyUsSection`
   - `PricingSection`
@@ -121,19 +121,19 @@ Implement complete dark mode with theme toggle.
   - `FAQSection`
   - `BookingStepper`
   - `StepPaket`, `StepJadwal`, `StepDataDiri`, `StepCheckout`
-- [ ] Replace hardcoded colors with theme tokens
-- [ ] Add CSS transitions for smooth theme switching
+- [x] Replace hardcoded colors with theme tokens
+- [x] Add CSS transitions for smooth theme switching
 
 #### 2.4 Design Tokens
 **Files**: `tailwind.config.ts`, `src/index.css`  
 
-- [ ] Define CSS variables for:
+- [x] Define CSS variables for:
   - Background colors (light/dark)
   - Surface colors (light/dark)
   - Border colors (light/dark)
   - Text colors (primary, secondary, muted)
   - Accent/brand colors (light/dark)
-- [ ] Verify WCAG AA contrast ratios
+- [x] Verify WCAG AA contrast ratios
   - Use online contrast checker or automated tool
 
 ### Entry Criteria

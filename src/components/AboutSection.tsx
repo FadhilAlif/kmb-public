@@ -70,6 +70,10 @@ const AboutSection = () => {
                 src={instructorProfile}
                 alt="Instruktur Utama"
                 className="w-16 h-16 rounded-full object-cover"
+                loading="lazy"
+                decoding="async"
+                width="64"
+                height="64"
               />
               <div>
                 <p className="font-semibold text-foreground">Pak Bambang S.</p>
@@ -106,6 +110,10 @@ const AboutSection = () => {
                   src={image.src}
                   alt={image.alt}
                   className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                  decoding="async"
+                  width="400"
+                  height="200"
                 />
               </motion.div>
             ))}

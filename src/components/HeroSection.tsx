@@ -110,6 +110,10 @@ const HeroSection = () => {
                     src={heroImage}
                     alt="Instruktur mengajar mengemudi"
                     className="w-full h-full object-cover"
+                    loading="eager"
+                    decoding="async"
+                    width="600"
+                    height="600"
                   />
                 </div>
 
