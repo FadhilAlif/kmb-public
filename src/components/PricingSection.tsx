@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -215,4 +215,4 @@ const PricingSection = () => {
   );
 };
 
-export default React.memo(PricingSection);
+export default memo(PricingSection);

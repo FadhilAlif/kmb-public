@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, memo } from "react";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -149,4 +149,4 @@ const HeroSection = () => {
   );
 };
 
-export default React.memo(HeroSection);
+export default memo(HeroSection);

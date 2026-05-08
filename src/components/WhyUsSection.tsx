@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Award, Clock, Car, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -96,4 +97,4 @@ const WhyUsSection = () => {
   );
 };
 
-export default React.memo(WhyUsSection);
+export default memo(WhyUsSection);

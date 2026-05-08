@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -90,4 +91,4 @@ const FAQSection = () => {
   );
 };
 
-export default React.memo(FAQSection);
+export default memo(FAQSection);

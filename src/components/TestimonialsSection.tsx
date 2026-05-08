@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Star, Quote } from "lucide-react";
 import { motion } from "framer-motion";
 import testimonial1 from "@/assets/testimonial-1.jpg";
@@ -109,4 +110,4 @@ const TestimonialsSection = () => {
   );
 };
 
-export default React.memo(TestimonialsSection);
+export default memo(TestimonialsSection);

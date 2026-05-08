@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { MapPin, Phone, Mail, Clock, Instagram, Facebook } from "lucide-react";
 
 const Footer = () => {
@@ -106,4 +107,4 @@ const Footer = () => {
   );
 };
 
-export default React.memo(Footer);
+export default memo(Footer);

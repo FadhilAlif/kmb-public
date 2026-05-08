@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import instructorProfile from "@/assets/instructor-profile.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
@@ -124,4 +125,4 @@ const AboutSection = () => {
   );
 };
 
-export default React.memo(AboutSection);
+export default memo(AboutSection);

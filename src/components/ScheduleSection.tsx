@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,4 +42,4 @@ const ScheduleSection = () => {
   );
 };
 
-export default React.memo(ScheduleSection);
+export default memo(ScheduleSection);

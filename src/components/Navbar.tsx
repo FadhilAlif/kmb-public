@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -193,4 +193,4 @@ const Navbar = () => {
   );
 };
 
-export default React.memo(Navbar);
+export default memo(Navbar);
