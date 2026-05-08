@@ -2,7 +2,7 @@ import { useState, useCallback, memo } from "react";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import heroImage from "@/assets/hero-driving-lesson.jpg";
+import heroImage from "@/assets/hero-driving-lesson.webp";
 import WhatsAppConfirmDialog from "./WhatsAppConfirmDialog";
 
 const PHONE_NUMBER = "6285100450236";

@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { Star, Quote } from "lucide-react";
 import { motion } from "framer-motion";
-import testimonial1 from "@/assets/testimonial-1.jpg";
-import testimonial2 from "@/assets/testimonial-2.jpg";
-import testimonial3 from "@/assets/testimonial-3.jpg";
+import testimonial1 from "@/assets/testimonial-1.webp";
+import testimonial2 from "@/assets/testimonial-2.webp";
+import testimonial3 from "@/assets/testimonial-3.webp";
 
 const testimonials = [
   {
