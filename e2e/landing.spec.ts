@@ -6,7 +6,7 @@ test.describe("Landing page", () => {
   });
 
   test("page loads and shows brand name", async ({ page }) => {
-    await expect(page.getByText("Kursus Mobil Bantul")).toBeVisible();
+    await expect(page.getByRole("link", { name: /Kursus Mobil Bantul/i })).toBeVisible();
   });
 
   test("theme toggle is present and clickable", async ({ page }) => {
@@ -26,6 +26,6 @@ test.describe("Landing page", () => {
   });
 
   test('"Lihat Paket Harga" button is visible', async ({ page }) => {
-    await expect(page.getByRole("link", { name: "Lihat Paket Harga" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Lihat Paket Harga" })).toBeVisible();
   });
 });

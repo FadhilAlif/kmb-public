@@ -10,10 +10,15 @@ test.describe("Booking page", () => {
   });
 
   test("stepper shows 4 steps", async ({ page }) => {
-    await expect(page.getByText("Paket")).toBeVisible();
-    await expect(page.getByText("Jadwal")).toBeVisible();
-    await expect(page.getByText("Data Diri")).toBeVisible();
-    await expect(page.getByText("Checkout")).toBeVisible();
+    // Wait for page to load
+    await page.waitForLoadState("networkidle");
+    // Check stepper steps using heading role to avoid duplicate text
+    await expect(page.getByText("Booking Kursus")).toBeVisible();
+    // Verify step labels exist
+    await expect(page.locator("text=Paket").first()).toBeVisible();
+    await expect(page.locator("text=Jadwal").first()).toBeVisible();
+    await expect(page.locator("text=Data Diri").first()).toBeVisible();
+    await expect(page.locator("text=Checkout").first()).toBeVisible();
   });
 
   test("back button navigates to landing page", async ({ page }) => {
