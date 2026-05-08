@@ -4,6 +4,7 @@ import { Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import WhatsAppConfirmDialog from "./WhatsAppConfirmDialog";
+import { ThemeToggle } from "./ThemeToggle";
 
 const PHONE_NUMBER = "6285100450236";
 const DEFAULT_MESSAGE = "Halo, saya tertarik dengan kursus mobil";
@@ -93,8 +94,9 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* CTA Button - Desktop */}
-            <div className="hidden md:block">
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-2">
+              <ThemeToggle />
               <Button
                 onClick={handleWhatsAppClick}
                 className="bg-whatsapp hover:bg-whatsapp-hover text-accent-foreground font-semibold gap-2"
@@ -142,6 +144,10 @@ const Navbar = () => {
                     {link.label}
                   </a>
                 ))}
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-muted-foreground font-medium">Tema</span>
+                  <ThemeToggle />
+                </div>
                 <Button
                   onClick={handleWhatsAppClick}
                   className="w-full bg-whatsapp hover:bg-whatsapp-hover text-accent-foreground font-semibold gap-2"

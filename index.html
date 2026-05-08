@@ -1,28 +1,43 @@
 <!doctype html>
-<html lang="en">
+<html lang="id" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>KMB</title>
-    <meta name="description" content="Kursus Mobil Bantul" />
+    <title>KMB - Kursus Mobil Bantul</title>
+    <meta name="description" content="Kursus mengemudi terbaik di Bantul. Pelajari mengemudi dengan instruktur berpengalaman. Pesan kursus mobil sekarang!" />
     <meta name="author" content="KMB" />
+    <meta name="theme-color" content="#0f172a" />
+    
+    <!-- Resource hints for performance -->
+    <link rel="preconnect" href="https://ysouhlphwobrnpxyvktq.supabase.co" />
+    <link rel="dns-prefetch" href="https://ysouhlphwobrnpxyvktq.supabase.co" />
+    
+    <!-- Preload critical font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="KMB" />
-    <meta property="og:description" content="Kursus Mobil Bantul" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="KMB - Kursus Mobil Bantul" />
+    <meta property="og:description" content="Kursus mengemudi terbaik di Bantul. Pelajari mengemudi dengan instruktur berpengalaman." />
     <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://lovable.dev/opengraph-image-p98pqg.png"
-    />
+    <meta property="og:image" content="/og-image.jpg" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@KMB" />
-    <meta
-      name="twitter:image"
-      content="https://lovable.dev/opengraph-image-p98pqg.png"
-    />
+    <meta name="twitter:image" content="/og-image.jpg" />
+    
+    <!-- Prevent FOUC for dark mode -->
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme') || 'system';
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = theme === 'dark' || (theme === 'system' && systemDark);
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
 
   <body>
