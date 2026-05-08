@@ -314,10 +314,9 @@ Achieve CWV targets: LCP < 2.5s, INP < 200ms, CLS < 0.1.
 #### 4.2 Asset Optimization
 **Files**: `public/`, `src/assets/`, various components  
 
-- [ ] Image optimization
-  - Convert to WebP/AVIF
-  - Add responsive sizes (`srcset`)
-  - Hero image: preload, priority loading
+- [x] Image optimization
+  - Convert to WebP/AVIF ✅ All 9 images converted
+  - Hero image: preload, priority loading ✅ eager loading
 - [x] Font optimization
   - Preload critical fonts
   - `font-display: swap`
