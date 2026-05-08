@@ -46,9 +46,19 @@
    - lighthouserc.json with performance budgets
    - npm run lighthouse script
 
+### Additional Commits
+8. `9280260` - Deployment config (GitHub Actions, Vercel, DEPLOYMENT.md)
+9. `4806936` - Plan updates (mark completed tasks)
+10. `7bb0ca4` - Fixed E2E tests (all 21 passing)
+
 ### Blocker
-- **Status**: PAUSED at user request ("pending dulu")
+- **Status**: PAUSED - awaiting user to continue
 - **Date**: 2026-05-08
-- **Reason**: User explicitly requested to pause/pending
-- **Completed**: 53/125 tasks (Phase 1-5 core complete)
-- **Remaining**: Phase 5.3 (cross-browser), Phase 5.4 (accessibility), Phase 6 (deployment)
+- **Reason**: User explicitly requested "pending dulu". Remaining 29 tasks require manual verification:
+  - Run Lighthouse (requires `npm run dev` + `npm run lighthouse`)
+  - Accessibility audit (requires axe-core or manual testing)
+  - Console error check (requires browser DevTools)
+  - Visual regression check (requires manual inspection)
+  - Production deployment (requires Vercel/Netlify account)
+- **Completed**: 96/125 tasks (all implementation + E2E tests)
+- **Remaining**: 29 verification/deployment tasks
