@@ -41,9 +41,14 @@
 - Images: 9 JPG → WebP (hero 71KB → 38KB)
 - TypeScript: Strict mode, zero errors
 
-### Remaining (Optional)
-- Lighthouse CI configuration
-- Cross-browser manual testing
-- Accessibility audit (axe-core)
-- Deployment to production
-- Monitoring setup (Analytics, Sentry)
+### Completed After Summary
+7. `ac1857c` - Phase 5: Lighthouse CI configuration
+   - lighthouserc.json with performance budgets
+   - npm run lighthouse script
+
+### Blocker
+- **Status**: PAUSED at user request ("pending dulu")
+- **Date**: 2026-05-08
+- **Reason**: User explicitly requested to pause/pending
+- **Completed**: 53/125 tasks (Phase 1-5 core complete)
+- **Remaining**: Phase 5.3 (cross-browser), Phase 5.4 (accessibility), Phase 6 (deployment)

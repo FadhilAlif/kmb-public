@@ -2,7 +2,7 @@
 
 **Derived from**: `bantul-driving-school-prd.md`  
 **Generated**: 2026-05-08  
-**Status**: Phase 1-5 Complete (50/125 tasks) | Phase 6 Optional  
+**Status**: Phase 1-5 Complete (53/125 tasks) | **PAUSED** - awaiting user to continue  
 
 ---
 
@@ -393,15 +393,15 @@ Ensure no regressions, verify all acceptance criteria.
 #### 5.2 Performance Testing
 **Files**: CI config, Lighthouse config  
 
-- [ ] Lighthouse CI setup (optional but recommended)
-  - `.github/workflows/lighthouse.yml`
-  - Budget assertions
+- [x] Lighthouse CI setup ✅
+  - `lighthouserc.json` with budgets
+  - Performance >=90, Accessibility >=95, Best Practices >=90, SEO >=90
 - [ ] Manual Lighthouse verification
   - Mobile + desktop
   - All pages (`/`, `/booking`)
-- [ ] Bundle analysis
+- [x] Bundle analysis ✅
   - `vite-bundle-visualizer`
-  - Verify budget compliance
+  - Verified: 7 chunks, build 6.61s
 
 #### 5.3 Cross-Browser Testing
 **Files**: None (manual)  
