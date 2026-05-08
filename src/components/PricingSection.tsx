@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Star, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,9 @@ const PricingSection = () => {
 
   const displayPackages = useOwnCar ? mobilSendiri : mobilKursus;
 
-  const handlePackageClick = (pkgId: string) => {
+  const handlePackageClick = useCallback((pkgId: string) => {
     navigate(`/booking?packageId=${pkgId}`);
-  };
+  }, [navigate]);
 
   return (
     <section id="paket" className="py-20 bg-background">
@@ -215,4 +215,4 @@ const PricingSection = () => {
   );
 };
 
-export default PricingSection;
+export default React.memo(PricingSection);

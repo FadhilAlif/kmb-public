@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -10,12 +10,12 @@ const PHONE_NUMBER = "6285100450236";
 const HeroSection = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleScrollToPricing = () => {
+  const handleScrollToPricing = useCallback(() => {
     const element = document.querySelector("#paket");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, []);
 
   return (
     <>
@@ -149,4 +149,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default React.memo(HeroSection);

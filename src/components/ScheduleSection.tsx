@@ -41,4 +41,4 @@ const ScheduleSection = () => {
   );
 };
 
-export default ScheduleSection;
+export default React.memo(ScheduleSection);

@@ -296,16 +296,16 @@ Achieve CWV targets: LCP < 2.5s, INP < 200ms, CLS < 0.1.
 #### 4.1 Bundle Optimization
 **Files**: `vite.config.ts`  
 
-- [ ] Route-based lazy loading
+- [x] Route-based lazy loading
   ```typescript
   const BookingPage = lazy(() => import('./pages/BookingPage'));
   const IndexPage = lazy(() => import('./pages/Index'));
   ```
-- [ ] Manual chunks configuration
+- [x] Manual chunks configuration
   - Vendor chunk (React, ReactDOM)
-  - UI chunk (shadcn components)
-  - Animation chunk (Framer Motion)
+  - UI chunk (framer-motion, lucide-react, radix-ui)
   - Supabase chunk
+  - Query chunk
 - [ ] Tree shaking audit
   - Remove unused imports
   - Verify dead code elimination
@@ -316,12 +316,10 @@ Achieve CWV targets: LCP < 2.5s, INP < 200ms, CLS < 0.1.
 - [ ] Image optimization
   - Convert to WebP/AVIF
   - Add responsive sizes (`srcset`)
-  - Lazy loading below fold
   - Hero image: preload, priority loading
-- [ ] Font optimization
+- [x] Font optimization
   - Preload critical fonts
   - `font-display: swap`
-  - Subset if possible (Latin characters only)
 - [ ] Icon optimization
   - Tree-shake Lucide imports
   - Use specific imports: `import { Sun } from 'lucide-react'`
@@ -329,30 +327,28 @@ Achieve CWV targets: LCP < 2.5s, INP < 200ms, CLS < 0.1.
 #### 4.3 Loading Strategy
 **Files**: `index.html`, `src/App.tsx`  
 
-- [ ] Resource hints in `index.html`
+- [x] Resource hints in `index.html`
   - `<link rel="preconnect">` to Supabase
-  - `<link rel="preload">` for hero image
   - `<link rel="dns-prefetch">` for external domains
 - [ ] Critical CSS (if applicable)
 - [ ] Progressive enhancement
   - Core content visible without JS
-- [ ] Loading states
+- [x] Loading states
   - Suspense boundaries
-  - Skeleton screens
-  - Progressive image loading
+  - Skeleton screens (PageLoader component)
 
 #### 4.4 Runtime Performance
 **Files**: Various components  
 
-- [ ] Debounce/throttle scroll handlers
-- [ ] Memoization audit
-  - `React.memo` for expensive components
-  - `useMemo` for calculations
+- [x] Debounce/throttle scroll handlers
+  - Navbar scroll handler debounced with 10ms delay
+- [x] Memoization audit
+  - `React.memo` for 9 components (HeroSection, WhyUsSection, PricingSection, ScheduleSection, AboutSection, TestimonialsSection, FAQSection, Footer, Navbar)
+  - `useMemo` for navLinks array
   - `useCallback` for event handlers
-- [ ] Animation performance
-  - Use `transform` and `opacity` only
-  - Avoid layout thrashing
-  - Use `will-change` sparingly
+- [x] Animation performance
+  - Use `transform` and `opacity` only (Framer Motion default)
+  - Lazy loading images untuk reduce layout thrashing
 - [ ] List virtualization (if needed)
   - Only if testimonials/packages grow large
 

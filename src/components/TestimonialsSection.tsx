@@ -109,4 +109,4 @@ const TestimonialsSection = () => {
   );
 };
 
-export default TestimonialsSection;
+export default React.memo(TestimonialsSection);

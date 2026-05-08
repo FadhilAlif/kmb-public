@@ -96,4 +96,4 @@ const WhyUsSection = () => {
   );
 };
 
-export default WhyUsSection;
+export default React.memo(WhyUsSection);

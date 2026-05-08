@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,12 +9,31 @@ import { ThemeToggle } from "./ThemeToggle";
 const PHONE_NUMBER = "6285100450236";
 const DEFAULT_MESSAGE = "Halo, saya tertarik dengan kursus mobil";
 
-const navLinks = [
+const NAV_LINKS = [
   { href: "#paket", label: "Paket Harga" },
   { href: "#jadwal", label: "Cek Jadwal", isBooking: true },
   { href: "#tentang", label: "Tentang Kami" },
   { href: "#kontak", label: "Kontak" },
-];
+] as const;
+
+type NavLink = (typeof NAV_LINKS)[number];
+
+function useDebouncedCallback<T extends (...args: Parameters<T>) => void>(
+  callback: T,
+  delay: number,
+): T {
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
+
+  return useCallback(
+    ((...args: Parameters<T>) => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => callbackRef.current(...args), delay);
+    }) as T,
+    [delay],
+  );
+}
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,15 +41,18 @@ const Navbar = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
 
+  const navLinks = useMemo(() => NAV_LINKS, []);
+
+  const handleScroll = useDebouncedCallback(() => {
+    setIsScrolled(window.scrollY > 20);
+  }, 10);
+
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
-  const handleNavClick = (link: (typeof navLinks)[0]) => {
+  const handleNavClick = useCallback((link: NavLink) => {
     setIsOpen(false);
     if ("isBooking" in link && link.isBooking) {
       navigate("/booking");
@@ -40,12 +62,12 @@ const Navbar = () => {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, [navigate]);
 
-  const handleWhatsAppClick = () => {
+  const handleWhatsAppClick = useCallback(() => {
     setIsOpen(false);
     setDialogOpen(true);
-  };
+  }, []);
 
   return (
     <>
@@ -63,7 +85,7 @@ const Navbar = () => {
               href="#beranda"
               onClick={(e) => {
                 e.preventDefault();
-                handleNavClick({ href: "#beranda", label: "Beranda" });
+                handleNavClick({ href: "#beranda", label: "Beranda" } as NavLink);
               }}
               className="flex items-center gap-2"
             >
@@ -171,4 +193,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);

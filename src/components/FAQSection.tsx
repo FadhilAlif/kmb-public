@@ -90,4 +90,4 @@ const FAQSection = () => {
   );
 };
 
-export default FAQSection;
+export default React.memo(FAQSection);
