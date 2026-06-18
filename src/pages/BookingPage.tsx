@@ -60,6 +60,8 @@ const BookingPage = () => {
           name="description"
           content="Booking jadwal kursus mengemudi di Bantul. Pilih paket, jadwal, dan konfirmasi pembayaran."
         />
+        <meta name="robots" content="noindex, follow" />
+        <link rel="canonical" href="https://kursusmobilbantul.com/booking" />
       </Helmet>
 
       <div className="min-h-screen bg-background">
