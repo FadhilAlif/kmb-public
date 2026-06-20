@@ -38,3 +38,6 @@ playwright-report/
 *.njsproj
 *.sln
 *.sw?
+sql/
+e2e/
+.sisyphus/
