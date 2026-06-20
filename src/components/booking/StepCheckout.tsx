@@ -1,12 +1,13 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft,
-  Upload,
   CheckCircle2,
   FileText,
-  X,
   Loader2,
+  MessageCircle,
+  Upload,
+  X,
 } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
@@ -21,27 +22,72 @@ interface StepCheckoutProps {
   onBack: () => void;
 }
 
+const ALLOWED_FILE_TYPES = new Map([
+  ["image/jpeg", ["jpg", "jpeg"]],
+  ["image/png", ["png"]],
+  ["application/pdf", ["pdf"]],
+]);
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const PHONE_NUMBER = "6285100450236";
+
+const getFileExtension = (fileName: string): string => {
+  const extension = fileName.split(".").pop();
+  return extension?.toLowerCase() ?? "";
+};
+
+const validatePaymentProof = (file: File): string | null => {
+  if (file.size === 0) {
+    return "File bukti transfer kosong.";
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
+    return "File maksimal 5MB.";
+  }
+
+  const allowedExtensions = ALLOWED_FILE_TYPES.get(file.type);
+  if (!allowedExtensions) {
+    return "Format file harus JPG, PNG, atau PDF.";
+  }
+
+  if (!allowedExtensions.includes(getFileExtension(file.name))) {
+    return "Ekstensi file tidak sesuai dengan tipe file.";
+  }
+
+  return null;
+};
+
 const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
   const [file, setFile] = useState<File | null>(data.buktiTransfer);
   const [preview, setPreview] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [bookingId, setBookingId] = useState("");
+  const [bookingCode, setBookingCode] = useState("");
+  const [website, setWebsite] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    if (f.size > 5 * 1024 * 1024) {
-      alert("File maksimal 5MB");
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (!selectedFile) return;
+
+    const validationError = validatePaymentProof(selectedFile);
+    if (validationError) {
+      toast({
+        title: "File tidak valid",
+        description: validationError,
+        variant: "destructive",
+      });
+      event.target.value = "";
       return;
     }
-    setFile(f);
-    onUpdate({ buktiTransfer: f });
-    if (f.type.startsWith("image/")) {
+
+    setFile(selectedFile);
+    onUpdate({ buktiTransfer: selectedFile });
+
+    if (selectedFile.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (ev) => setPreview(ev.target?.result as string);
-      reader.readAsDataURL(f);
+      reader.readAsDataURL(selectedFile);
     } else {
       setPreview(null);
     }
@@ -49,11 +95,21 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
 
   const handleSubmit = async () => {
     setSubmitting(true);
+
     try {
       if (!data.date || !data.timeSlot) {
         throw new Error(
           "Jadwal belum dipilih. Silakan kembali dan pilih jadwal.",
         );
+      }
+
+      if (!file) {
+        throw new Error("Bukti pembayaran wajib diupload.");
+      }
+
+      const validationError = validatePaymentProof(file);
+      if (validationError) {
+        throw new Error(validationError);
       }
 
       const result = await submitBooking({
@@ -62,17 +118,16 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
         titikJemput: data.titikJemput,
         catatan: data.catatan,
         packageId: data.packageId,
-        totalPrice: data.price,
-        totalSessions: data.sessions,
-        date: data.date,
+        date: format(data.date, "yyyy-MM-dd"),
         timeSlot: data.timeSlot,
         buktiTransfer: file,
+        website,
       });
 
-      setBookingId(result.bookingId);
+      setBookingCode(result.bookingCode);
       toast({
-        title: "Booking berhasil dikonfirmasi! 🎉",
-        description: `Booking ID: ${result.bookingId.slice(0, 8).toUpperCase()}`,
+        title: "Booking berhasil dikirim",
+        description: `Kode booking: ${result.bookingCode}`,
       });
       setSubmitted(true);
     } catch (error) {
@@ -91,7 +146,11 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
   };
 
   if (submitted) {
-    const shortId = bookingId.slice(0, 8).toUpperCase();
+    const whatsappMessage = encodeURIComponent(
+      `Halo Admin KMB, saya sudah melakukan booking kursus mobil dengan kode booking ${bookingCode}. Mohon dibantu konfirmasi jadwal saya.`,
+    );
+    const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${whatsappMessage}`;
+
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -102,25 +161,33 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
           <CheckCircle2 className="w-10 h-10 text-primary" />
         </div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          Booking Berhasil!
+          Booking Berhasil Dikirim
         </h2>
-        <p className="text-muted-foreground mb-4">Nomor booking Anda:</p>
+        <p className="text-muted-foreground mb-4">Kode booking Anda:</p>
         <div className="bg-muted rounded-xl p-4 mb-6">
           <span className="text-2xl font-mono font-bold text-primary">
-            {shortId}
+            {bookingCode}
           </span>
         </div>
-        <p className="text-sm text-muted-foreground mb-8">
-          Kami akan menghubungi Anda via WhatsApp di{" "}
-          <strong>{data.whatsapp}</strong> untuk konfirmasi. Bukti transfer Anda
-          sedang diverifikasi oleh admin.
+        <p className="text-sm text-muted-foreground mb-6">
+          Admin KMB akan memverifikasi bukti pembayaran dan menghubungi Anda via
+          WhatsApp di <strong>{data.whatsapp}</strong> untuk konfirmasi jadwal
+          final.
         </p>
-        <Button
-          onClick={() => (window.location.href = "/")}
-          className="bg-primary text-primary-foreground"
-        >
-          Kembali ke Beranda
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button asChild className="bg-whatsapp hover:bg-whatsapp-hover text-accent-foreground gap-2">
+            <a href={whatsappUrl} target="_blank" rel="noreferrer">
+              <MessageCircle className="w-4 h-4" />
+              Konfirmasi via WhatsApp
+            </a>
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = "/")}
+          >
+            Kembali ke Beranda
+          </Button>
+        </div>
       </motion.div>
     );
   }
@@ -136,21 +203,18 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
         </p>
       </div>
 
-      {/* Summary */}
       <div className="bg-card border border-border rounded-2xl p-6 mb-6 space-y-4">
         <h3 className="font-semibold text-foreground text-lg">
           Ringkasan Booking
         </h3>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <span className="text-muted-foreground">Paket</span>
-          <span className="text-foreground font-medium">
-            {data.packageName}
-          </span>
+          <span className="text-foreground font-medium">{data.packageName}</span>
           <span className="text-muted-foreground">Tipe</span>
           <span className="text-foreground font-medium">
             {data.useOwnCar ? "Mobil Sendiri" : "Mobil Kursus"}
           </span>
-          <span className="text-muted-foreground">Jadwal</span>
+          <span className="text-muted-foreground">Preferensi Jadwal</span>
           <span className="text-foreground font-medium">
             {data.date
               ? format(data.date, "EEEE, d MMMM yyyy", { locale: id })
@@ -162,9 +226,7 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
           <span className="text-muted-foreground">WhatsApp</span>
           <span className="text-foreground font-medium">{data.whatsapp}</span>
           <span className="text-muted-foreground">Titik Jemput</span>
-          <span className="text-foreground font-medium">
-            {data.titikJemput}
-          </span>
+          <span className="text-foreground font-medium">{data.titikJemput}</span>
         </div>
         <div className="border-t border-border pt-4 flex justify-between items-center">
           <span className="font-semibold text-foreground">Total Biaya</span>
@@ -174,7 +236,6 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
         </div>
       </div>
 
-      {/* Bank Info */}
       <div className="bg-muted rounded-2xl p-6 mb-6">
         <h3 className="font-semibold text-foreground mb-3">
           Transfer ke Rekening
@@ -201,7 +262,6 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
         </div>
       </div>
 
-      {/* Upload */}
       <div className="mb-8">
         <h3 className="font-semibold text-foreground mb-3">
           Upload Bukti Transfer
@@ -209,10 +269,20 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
         <input
           ref={fileRef}
           type="file"
-          accept=".jpg,.jpeg,.png,.pdf"
+          accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"
           className="hidden"
           onChange={handleFileChange}
           aria-label="file"
+        />
+        <input
+          type="text"
+          name="website"
+          value={website}
+          onChange={(event) => setWebsite(event.target.value)}
+          className="sr-only"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
         />
         {!file ? (
           <button
@@ -223,7 +293,7 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
             <span className="font-medium">
               Klik untuk upload bukti transfer
             </span>
-            <span className="text-xs">.jpg, .png, .pdf — maks 5MB</span>
+            <span className="text-xs">.jpg, .jpeg, .png, .pdf - maks 5MB</span>
           </button>
         ) : (
           <div className="border border-border rounded-2xl p-4 flex items-center gap-4">
@@ -281,7 +351,7 @@ const StepCheckout = ({ data, onUpdate, onBack }: StepCheckoutProps) => {
               Memproses...
             </>
           ) : (
-            "Konfirmasi Booking"
+            "Kirim Booking"
           )}
         </Button>
       </div>

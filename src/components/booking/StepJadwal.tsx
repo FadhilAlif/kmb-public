@@ -21,7 +21,7 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
   const [selectedTime, setSelectedTime] = useState(data.timeSlot);
 
   // Fetch real booked slots from Supabase for the selected date
-  const { data: bookedSlots, isLoading: loadingSlots } =
+  const { data: bookedSlots, isLoading: loadingSlots, isError: slotsError } =
     useBookedSlots(selectedDate);
 
   const handleDateSelect = (date: Date | undefined) => {
@@ -45,7 +45,12 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
           Pilih Jadwal
         </h2>
         <p className="text-muted-foreground">
-          Pilih tanggal dan waktu yang tersedia
+          Pilih preferensi jadwal sesi pertama Anda
+        </p>
+        <p className="text-sm text-muted-foreground max-w-2xl mx-auto mt-3">
+          Jadwal yang Anda pilih merupakan preferensi awal. Admin KMB akan
+          menghubungi Anda melalui WhatsApp untuk verifikasi pembayaran dan
+          konfirmasi jadwal final.
         </p>
       </div>
 
@@ -81,6 +86,11 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
                 <div className="flex items-center justify-center py-10 gap-2 text-muted-foreground">
                   <Loader2 className="w-5 h-5 animate-spin" />
                   <span className="text-sm">Memeriksa ketersediaan...</span>
+                </div>
+              ) : slotsError ? (
+                <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+                  Gagal memeriksa ketersediaan slot. Silakan pilih tanggal lagi
+                  atau refresh halaman.
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -127,7 +137,7 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
         </Button>
         <Button
           onClick={handleContinue}
-          disabled={!selectedDate || !selectedTime || loadingSlots}
+          disabled={!selectedDate || !selectedTime || loadingSlots || slotsError}
           className="bg-primary text-primary-foreground"
         >
           Lanjutkan

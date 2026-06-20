@@ -1,3 +1,14 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+
+# Environment files
+.env
+.env.*.local
+
 # Logs
 logs
 *.log
@@ -7,11 +18,15 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-.env
+# Lockfiles (pick one: npm)
+bun.lockb
+
+# Playwright
+test-results/
+playwright-report/
+
+# TypeScript
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +38,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+sql/
+e2e/
+.sisyphus/

@@ -4,7 +4,6 @@ import { Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import WhatsAppConfirmDialog from "./WhatsAppConfirmDialog";
-import { ThemeToggle } from "./ThemeToggle";
 
 const PHONE_NUMBER = "6285100450236";
 const DEFAULT_MESSAGE = "Halo, saya tertarik dengan kursus mobil";
@@ -13,10 +12,14 @@ const NAV_LINKS = [
   { href: "#paket", label: "Paket Harga" },
   { href: "#jadwal", label: "Cek Jadwal", isBooking: true },
   { href: "#tentang", label: "Tentang Kami" },
-  { href: "#kontak", label: "Kontak" },
+  { href: "#faq", label: "FAQ" },
 ] as const;
 
-type NavLink = (typeof NAV_LINKS)[number];
+interface NavLink {
+  href: string;
+  label: string;
+  isBooking?: boolean;
+}
 
 function useDebouncedCallback<T extends (...args: Parameters<T>) => void>(
   callback: T,
@@ -29,7 +32,10 @@ function useDebouncedCallback<T extends (...args: Parameters<T>) => void>(
   return useCallback(
     ((...args: Parameters<T>) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => callbackRef.current(...args), delay);
+      timeoutRef.current = setTimeout(
+        () => callbackRef.current(...args),
+        delay,
+      );
     }) as T,
     [delay],
   );
@@ -52,17 +58,20 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  const handleNavClick = useCallback((link: NavLink) => {
-    setIsOpen(false);
-    if ("isBooking" in link && link.isBooking) {
-      navigate("/booking");
-      return;
-    }
-    const element = document.querySelector(link.href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [navigate]);
+  const handleNavClick = useCallback(
+    (link: NavLink) => {
+      setIsOpen(false);
+      if ("isBooking" in link && link.isBooking) {
+        navigate("/booking");
+        return;
+      }
+      const element = document.querySelector(link.href);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+    [navigate],
+  );
 
   const handleWhatsAppClick = useCallback(() => {
     setIsOpen(false);
@@ -85,7 +94,7 @@ const Navbar = () => {
               href="#beranda"
               onClick={(e) => {
                 e.preventDefault();
-                handleNavClick({ href: "#beranda", label: "Beranda" } as NavLink);
+                handleNavClick({ href: "#beranda", label: "Beranda" });
               }}
               className="flex items-center gap-2"
             >
@@ -118,7 +127,6 @@ const Navbar = () => {
 
             {/* Desktop Actions */}
             <div className="hidden md:flex items-center gap-2">
-              <ThemeToggle />
               <Button
                 onClick={handleWhatsAppClick}
                 className="bg-whatsapp hover:bg-whatsapp-hover text-accent-foreground font-semibold gap-2"
@@ -166,10 +174,6 @@ const Navbar = () => {
                     {link.label}
                   </a>
                 ))}
-                <div className="flex items-center justify-between py-2">
-                  <span className="text-muted-foreground font-medium">Tema</span>
-                  <ThemeToggle />
-                </div>
                 <Button
                   onClick={handleWhatsAppClick}
                   className="w-full bg-whatsapp hover:bg-whatsapp-hover text-accent-foreground font-semibold gap-2"

@@ -1,165 +1,73 @@
-# Kursus Mobil Bantul
+# Welcome to your Lovable project
 
-Website **Kursus Mobil Bantul** — platform pemesanan kursus mengemudi terbaik di Bantul & Yogyakarta. Aplikasi ini menyediakan landing page informatif serta sistem booking multi-step yang terintegrasi langsung dengan database Supabase.
+## Project info
 
----
+**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-## ✨ Fitur Utama
+## How can I edit this code?
 
-- **Landing Page Profesional** — Hero section, keunggulan, harga, jadwal, tentang kami, testimoni, dan FAQ
-- **Sistem Booking Multi-Step** — Alur pemesanan: Pilih Paket → Pilih Jadwal → Data Diri → Checkout
-- **Integrasi Supabase** — Database realtime untuk data siswa, booking, pembayaran, dan jadwal sesi
-- **Upload Bukti Transfer** — Unggah bukti pembayaran langsung ke Supabase Storage
-- **SEO Ready** — Meta tags dinamis dengan React Helmet Async
-- **WhatsApp Integration** — Tombol floating untuk komunikasi langsung via WhatsApp
-- **Responsive Design** — Tampilan optimal di desktop, tablet, dan mobile
-- **Animasi Halus** — Transisi dan animasi menggunakan Framer Motion
+There are several ways of editing your application.
 
----
+**Use Lovable**
 
-## 🛠️ Teknologi
+Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
 
-| Kategori | Teknologi |
-|----------|-----------|
-| Build Tool | [Vite](https://vitejs.dev/) |
-| Framework | [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) |
-| Styling | [Tailwind CSS](https://tailwindcss.com/) |
-| UI Components | [shadcn/ui](https://ui.shadcn.com/) + [Radix UI](https://www.radix-ui.com/) |
-| Animasi | [Framer Motion](https://www.framer.com/motion/) |
-| Routing | [React Router DOM](https://reactrouter.com/) |
-| State & Data | [TanStack Query](https://tanstack.com/query/) |
-| Backend | [Supabase](https://supabase.com/) |
-| Forms | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) |
-| Icons | [Lucide React](https://lucide.dev/) |
+Changes made via Lovable will be committed automatically to this repo.
 
----
+**Use your preferred IDE**
 
-## 🚀 Cara Menjalankan
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-### Prasyarat
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-- [Node.js](https://nodejs.org/) (disarankan versi LTS)
-- [npm](https://www.npmjs.com/) atau [Bun](https://bun.sh/)
-- Akun [Supabase](https://supabase.com/) dengan project yang sudah dikonfigurasi
+Follow these steps:
 
-### Langkah Instalasi
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-1. **Clone repository**
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-   ```sh
-   git clone <URL_REPOSITORY>
-   cd bantul-driving-school-hub
-   ```
+# Step 3: Install the necessary dependencies.
+npm i
 
-2. **Install dependensi**
-
-   Menggunakan npm:
-   ```sh
-   npm install
-   ```
-
-   Atau menggunakan Bun:
-   ```sh
-   bun install
-   ```
-
-3. **Konfigurasi environment**
-
-   Salin file `.env.example` menjadi `.env`:
-   ```sh
-   cp .env.example .env
-   ```
-
-   Isi variabel berikut di file `.env`:
-   ```env
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
-   ```
-
-4. **Jalankan server development**
-
-   ```sh
-   npm run dev
-   ```
-
-   Aplikasi akan berjalan di `http://localhost:5173`
-
-### Script Tersedia
-
-| Script | Perintah | Keterangan |
-|--------|----------|------------|
-| Development | `npm run dev` | Menjalankan server dev dengan hot reload |
-| Build | `npm run build` | Build untuk production |
-| Build Dev | `npm run build:dev` | Build dalam mode development |
-| Preview | `npm run preview` | Preview build production secara lokal |
-| Lint | `npm run lint` | Menjalankan ESLint |
-| Lighthouse | `npm run lighthouse` | Audit performa dengan Lighthouse CI |
-
----
-
-## 📁 Struktur Project
-
-```
-.
-├── public/                 # Asset statis
-├── src/
-│   ├── components/         # Komponen React
-│   │   ├── ui/            # Komponen shadcn/ui
-│   │   ├── booking/       # Komponen form booking (stepper, steps)
-│   │   ├── Navbar.tsx
-│   │   ├── HeroSection.tsx
-│   │   ├── PricingSection.tsx
-│   │   ├── ...
-│   │   └── FloatingWhatsApp.tsx
-│   ├── pages/             # Halaman aplikasi
-│   │   ├── Index.tsx      # Landing page
-│   │   ├── BookingPage.tsx # Halaman booking
-│   │   └── NotFound.tsx   # Halaman 404
-│   ├── services/          # Logika bisnis & API
-│   │   └── bookingService.ts
-│   ├── hooks/             # Custom React hooks
-│   ├── integrations/      # Konfigurasi third-party
-│   │   └── supabase/
-│   ├── lib/               # Utility functions
-│   ├── App.tsx            # Root component
-│   └── main.tsx           # Entry point
-├── .env.example           # Template environment variables
-├── vite.config.ts         # Konfigurasi Vite
-├── tailwind.config.ts     # Konfigurasi Tailwind CSS
-└── package.json
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
----
+**Edit a file directly in GitHub**
 
-## 🗄️ Skema Database (Supabase)
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-Project ini menggunakan tabel-tabel berikut di Supabase:
+**Use GitHub Codespaces**
 
-- **students** — Data siswa (nama, nomor WhatsApp, alamat penjemputan)
-- **packages** — Paket kursus yang tersedia (nama, harga, jumlah sesi, tipe mobil)
-- **bookings** — Data pemesanan (siswa, paket, status, catatan)
-- **payments** — Data pembayaran (jumlah, metode, bukti transfer, status)
-- **sessions** — Jadwal sesi kursus (tanggal, waktu mulai/selesai, status)
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-> Pastikan bucket/object storage `payment-proofs` sudah dibuat di Supabase Storage untuk fitur upload bukti transfer.
+## What technologies are used for this project?
 
----
+This project is built with:
 
-## 📦 Deployment
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-Project ini sudah dikonfigurasi untuk deployment ke [Vercel](https://vercel.com/).
+## How can I deploy this project?
 
-### Deploy ke Vercel
+Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
-1. Hubungkan repository ke Vercel
-2. Tambahkan environment variables `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`
-3. Deploy!
+## Can I connect a custom domain to my Lovable project?
 
----
+Yes, you can!
 
-## 📞 Kontak
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Untuk pertanyaan atau informasi lebih lanjut:
-
-- **WhatsApp**: [Hubungi Kami](https://wa.me/6285727304551) 
-- **Lokasi**: Bantul, Yogyakarta, Indonesia
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)

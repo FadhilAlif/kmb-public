@@ -12,11 +12,11 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">K</span>
+                <span className="text-primary-foreground font-bold text-lg">
+                  K
+                </span>
               </div>
-              <span className="font-bold text-xl">
-                Kursus Mobil Bantul
-              </span>
+              <span className="font-bold text-xl">Kursus Mobil Bantul</span>
             </div>
             <p className="text-background/70 mb-6 max-w-md">
               Tempat belajar mengemudi terbaik di Bantul dan sekitarnya. Dengan
