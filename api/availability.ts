@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import type { Database } from "../src/integrations/supabase/types";
+import type { Database } from "../src/integrations/supabase/types.js";
 
 export const config = {
   runtime: "edge",
@@ -110,7 +110,9 @@ export default async function handler(request: Request): Promise<Response> {
           throw legacyError;
         }
 
-        return json({ unavailableSlots: mapUnavailableSlots(legacyData ?? []) });
+        return json({
+          unavailableSlots: mapUnavailableSlots(legacyData ?? []),
+        });
       }
 
       throw error;
@@ -121,9 +123,6 @@ export default async function handler(request: Request): Promise<Response> {
     return json({ unavailableSlots });
   } catch (error) {
     console.error("availability_error", error);
-    return json(
-      { message: "Gagal memeriksa ketersediaan jadwal." },
-      500,
-    );
+    return json({ message: "Gagal memeriksa ketersediaan jadwal." }, 500);
   }
 }
