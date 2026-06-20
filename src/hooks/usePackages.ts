@@ -1,31 +1,49 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
 export type SupabasePackage = Tables<"packages">;
 
-/**
- * Fetches active packages from Supabase, ordered by price ascending.
- */
 export const usePackages = () => {
-  return useQuery({
-    queryKey: ["packages"],
-    queryFn: async (): Promise<SupabasePackage[]> => {
+  const [data, setData] = useState<SupabasePackage[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    const fetchPackages = async (): Promise<void> => {
+      setIsLoading(true);
+      setIsError(false);
+
       const { data, error } = await supabase
         .from("packages")
         .select("*")
         .eq("is_active", true)
         .order("price", { ascending: true });
 
-      if (error) throw error;
-      return data;
-    },
-  });
+      if (!active) return;
+
+      if (error) {
+        setIsError(true);
+        setData([]);
+      } else {
+        setData(data ?? []);
+      }
+
+      setIsLoading(false);
+    };
+
+    void fetchPackages();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return { data, isLoading, isError };
 };
 
-/**
- * Returns packages grouped by car_type for easy rendering.
- */
 export const useGroupedPackages = () => {
   const query = usePackages();
 

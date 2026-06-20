@@ -9,10 +9,10 @@ test.describe("Landing page", () => {
     await expect(page.getByRole("link", { name: /Kursus Mobil Bantul/i })).toBeVisible();
   });
 
-  test("theme toggle is present and clickable", async ({ page }) => {
-    const toggle = page.getByRole("button", { name: /switch to .+ mode/i });
-    await expect(toggle).toBeVisible();
-    await toggle.click();
+  test("theme toggle is not present", async ({ page }) => {
+    await expect(
+      page.getByRole("button", { name: /switch to .+ mode/i }),
+    ).toHaveCount(0);
   });
 
   test("navigation links are present and work", async ({ page }) => {

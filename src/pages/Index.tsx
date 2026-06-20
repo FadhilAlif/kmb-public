@@ -118,14 +118,14 @@ const Index = () => {
   return (
     <>
       <Helmet>
-        <title>Kursus Mobil Bantul | Belajar Mengemudi Terbaik di Yogyakarta</title>
+        <title>Kursus Mobil Bantul | Belajar Mengemudi Terbaik di Bantul Yogyakarta</title>
         <meta
           name="description"
           content="Kursus mengemudi terbaik di Bantul & Yogyakarta. Instruktur sabar, jadwal fleksibel, bisa pakai mobil sendiri. Garansi sampai mahir. Hubungi kami sekarang!"
         />
         <meta
           name="keywords"
-          content="kursus mobil bantul, belajar mengemudi yogyakarta, les nyetir bantul, kursus SIM bantul"
+          content="kursus mobil bantul, belajar mengemudi bantul yogyakarta, les nyetir bantul, kursus SIM bantul"
         />
         <link rel="canonical" href="https://kursusmobilbantul.com/" />
         <script type="application/ld+json">

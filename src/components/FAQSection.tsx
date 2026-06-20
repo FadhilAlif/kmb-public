@@ -42,7 +42,7 @@ const faqs = [
 
 const FAQSection = () => {
   return (
-    <section id="kontak" className="py-20 bg-secondary/50">
+    <section id="faq" className="py-20 bg-secondary/50">
       <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

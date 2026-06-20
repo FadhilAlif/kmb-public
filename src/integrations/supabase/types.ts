@@ -12,33 +12,66 @@ export type Database = {
   };
   public: {
     Tables: {
-      bookings: {
+      booking_rate_limits: {
         Row: {
+          attempts: number;
           created_at: string | null;
           id: string;
+          identifier: string;
+          scope: string;
+          window_start: string;
+        };
+        Insert: {
+          attempts?: number;
+          created_at?: string | null;
+          id?: string;
+          identifier: string;
+          scope: string;
+          window_start: string;
+        };
+        Update: {
+          attempts?: number;
+          created_at?: string | null;
+          id?: string;
+          identifier?: string;
+          scope?: string;
+          window_start?: string;
+        };
+        Relationships: [];
+      };
+      bookings: {
+        Row: {
+          booking_code: string;
+          created_at: string | null;
+          id: string;
+          notes: string | null;
           package_id: string | null;
           status: Database["public"]["Enums"]["booking_status_enum"] | null;
           student_id: string | null;
-          student_notes: string | null;
           total_price: number;
+          updated_at: string | null;
         };
         Insert: {
+          booking_code: string;
           created_at?: string | null;
           id?: string;
+          notes?: string | null;
           package_id?: string | null;
           status?: Database["public"]["Enums"]["booking_status_enum"] | null;
           student_id?: string | null;
-          student_notes?: string | null;
           total_price: number;
+          updated_at?: string | null;
         };
         Update: {
+          booking_code?: string;
           created_at?: string | null;
           id?: string;
+          notes?: string | null;
           package_id?: string | null;
           status?: Database["public"]["Enums"]["booking_status_enum"] | null;
           student_id?: string | null;
-          student_notes?: string | null;
           total_price?: number;
+          updated_at?: string | null;
         };
         Relationships: [
           {
@@ -66,6 +99,7 @@ export type Database = {
           name: string;
           price: number;
           total_sessions: number;
+          updated_at: string | null;
         };
         Insert: {
           car_type?: Database["public"]["Enums"]["car_type_enum"];
@@ -75,6 +109,7 @@ export type Database = {
           name: string;
           price: number;
           total_sessions: number;
+          updated_at?: string | null;
         };
         Update: {
           car_type?: Database["public"]["Enums"]["car_type_enum"];
@@ -84,6 +119,7 @@ export type Database = {
           name?: string;
           price?: number;
           total_sessions?: number;
+          updated_at?: string | null;
         };
         Relationships: [];
       };
@@ -93,9 +129,11 @@ export type Database = {
           booking_id: string | null;
           created_at: string | null;
           id: string;
-          payment_method: string | null;
-          proof_url: string | null;
+          method: string | null;
+          proof_path: string;
+          rejected_reason: string | null;
           status: Database["public"]["Enums"]["payment_status_enum"] | null;
+          updated_at: string | null;
           verified_at: string | null;
         };
         Insert: {
@@ -103,9 +141,11 @@ export type Database = {
           booking_id?: string | null;
           created_at?: string | null;
           id?: string;
-          payment_method?: string | null;
-          proof_url?: string | null;
+          method?: string | null;
+          proof_path: string;
+          rejected_reason?: string | null;
           status?: Database["public"]["Enums"]["payment_status_enum"] | null;
+          updated_at?: string | null;
           verified_at?: string | null;
         };
         Update: {
@@ -113,9 +153,11 @@ export type Database = {
           booking_id?: string | null;
           created_at?: string | null;
           id?: string;
-          payment_method?: string | null;
-          proof_url?: string | null;
+          method?: string | null;
+          proof_path?: string;
+          rejected_reason?: string | null;
           status?: Database["public"]["Enums"]["payment_status_enum"] | null;
+          updated_at?: string | null;
           verified_at?: string | null;
         };
         Relationships: [
@@ -132,32 +174,38 @@ export type Database = {
         Row: {
           booking_id: string | null;
           created_at: string | null;
-          end_time: string;
+          duration_minutes: number;
           id: string;
-          instructor_notes: string | null;
+          notes: string | null;
+          session_date: string;
           session_number: number;
           start_time: string;
           status: Database["public"]["Enums"]["session_status_enum"] | null;
+          updated_at: string | null;
         };
         Insert: {
           booking_id?: string | null;
           created_at?: string | null;
-          end_time: string;
+          duration_minutes?: number;
           id?: string;
-          instructor_notes?: string | null;
+          notes?: string | null;
+          session_date: string;
           session_number: number;
           start_time: string;
           status?: Database["public"]["Enums"]["session_status_enum"] | null;
+          updated_at?: string | null;
         };
         Update: {
           booking_id?: string | null;
           created_at?: string | null;
-          end_time?: string;
+          duration_minutes?: number;
           id?: string;
-          instructor_notes?: string | null;
+          notes?: string | null;
+          session_date?: string;
           session_number?: number;
           start_time?: string;
           status?: Database["public"]["Enums"]["session_status_enum"] | null;
+          updated_at?: string | null;
         };
         Relationships: [
           {
@@ -176,6 +224,7 @@ export type Database = {
           name: string;
           phone_number: string;
           pickup_address: string | null;
+          updated_at: string | null;
         };
         Insert: {
           created_at?: string | null;
@@ -183,6 +232,7 @@ export type Database = {
           name: string;
           phone_number: string;
           pickup_address?: string | null;
+          updated_at?: string | null;
         };
         Update: {
           created_at?: string | null;
@@ -190,6 +240,7 @@ export type Database = {
           name?: string;
           phone_number?: string;
           pickup_address?: string | null;
+          updated_at?: string | null;
         };
         Relationships: [];
       };
@@ -202,14 +253,13 @@ export type Database = {
     };
     Enums: {
       booking_status_enum:
-        | "awaiting_payment"
         | "pending_verification"
-        | "active"
-        | "completed"
-        | "canceled";
+        | "confirmed"
+        | "canceled"
+        | "completed";
       car_type_enum: "mobil_kursus" | "mobil_sendiri";
-      payment_status_enum: "pending" | "verified" | "rejected";
-      session_status_enum: "scheduled" | "completed" | "canceled";
+      payment_status_enum: "pending_verification" | "verified" | "rejected";
+      session_status_enum: "tentative" | "scheduled" | "completed" | "canceled";
     };
     CompositeTypes: {
       [_ in never]: never;
