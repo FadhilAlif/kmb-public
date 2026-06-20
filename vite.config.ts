@@ -84,18 +84,22 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      chunkSizeWarningLimit: 500,
+      chunkSizeWarningLimit: 600,
       rollupOptions: {
         output: {
-          manualChunks: {
-            vendor: ["react", "react-dom", "react-router-dom"],
-            ui: [
-              "framer-motion",
-              "lucide-react",
-              "@radix-ui/react-dialog",
-              "@radix-ui/react-tabs",
-            ],
-            supabase: ["@supabase/supabase-js"],
+          // Use a function-based approach to avoid the circular-chunk cycle.
+          // The object form put React in "vendor" and React-dependent libs
+          // (framer-motion, Radix UI, lucide-react) in "ui", but those libs
+          // internally import React — creating a vendor→ui→vendor cycle that
+          // breaks initialization order and throws at runtime.
+          // Grouping all React-ecosystem code into one "vendor" chunk
+          // eliminates the cycle while keeping Supabase separate for caching.
+          manualChunks: (id) => {
+            if (!id.includes("node_modules")) return undefined;
+            if (id.includes("@supabase")) return "supabase";
+            // Everything else (React, React-DOM, Router, Radix, Framer, etc.)
+            // lands in vendor so peer-dependency ordering is guaranteed.
+            return "vendor";
           },
         },
       },

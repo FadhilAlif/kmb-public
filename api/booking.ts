@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import type { Database } from "../src/integrations/supabase/types";
+import type { Database } from "../src/integrations/supabase/types.js";
 
 export const config = {
   runtime: "edge",
@@ -149,7 +149,10 @@ const getClientIp = (request: Request): string => {
   );
 };
 
-const getMemoryRateLimitStore = (): Map<string, { attempts: number; resetAt: number }> => {
+const getMemoryRateLimitStore = (): Map<
+  string,
+  { attempts: number; resetAt: number }
+> => {
   const globalState = globalThis as typeof globalThis & {
     __kmbBookingRateLimit?: Map<string, { attempts: number; resetAt: number }>;
   };
@@ -292,7 +295,9 @@ const generateSuffix = (): string => {
     .join("");
 };
 
-const generateBookingCode = async (supabase: SupabaseAdmin): Promise<string> => {
+const generateBookingCode = async (
+  supabase: SupabaseAdmin,
+): Promise<string> => {
   const datePart = getJakartaDateKey().replaceAll("-", "");
 
   for (let attempt = 0; attempt < 10; attempt += 1) {
@@ -397,7 +402,10 @@ export default async function handler(request: Request): Promise<Response> {
     }
 
     const normalizedWhatsApp = normalizeWhatsApp(parsed.data.whatsapp);
-    const phoneAllowed = await ensureWhatsAppLimit(supabase, normalizedWhatsApp);
+    const phoneAllowed = await ensureWhatsAppLimit(
+      supabase,
+      normalizedWhatsApp,
+    );
     if (!phoneAllowed) {
       return json({ message: RATE_LIMIT_MESSAGE }, 429);
     }
