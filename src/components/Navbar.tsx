@@ -10,7 +10,7 @@ const DEFAULT_MESSAGE = "Halo, saya tertarik dengan kursus mobil";
 
 const NAV_LINKS = [
   { href: "#paket", label: "Paket Harga" },
-  { href: "#jadwal", label: "Cek Jadwal", isBooking: true },
+  { href: "#jadwal", label: "Cek Jadwal" },
   { href: "#tentang", label: "Tentang Kami" },
   { href: "#faq", label: "FAQ" },
 ] as const;

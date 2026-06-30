@@ -61,6 +61,7 @@ const StepJadwal = ({ data, onUpdate, onNext, onBack }: StepJadwalProps) => {
             mode="single"
             selected={selectedDate}
             onSelect={handleDateSelect}
+            showOutsideDays={false}
             disabled={(date) => date < tomorrow}
             className="rounded-xl border bg-card p-4 pointer-events-auto"
             locale={id}
